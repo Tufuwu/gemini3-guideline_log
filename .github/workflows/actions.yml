@@ -1,38 +1,30 @@
-name: Node.js CI
+name: CI
 
 on:
   push:
-    branches: [ main, main ]
+    branches: [ "*" ]
   pull_request:
-    branches: [ main, main ]
+    branches: [ "*" ]
 
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
-
     strategy:
       matrix:
-        node-version: ["22", "20", "18", "16"]
-
+        node-version: ["0.10", "lts/*", "latest"]
+        test-suite: ["unit"]
+        include:
+          - node-version: "latest"
+            test-suite: "lint"
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
+      - uses: actions/checkout@v4
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
-          cache: 'npm'
-
-      - name: Install dependencies
-        run: npm install
-
-      - name: Run tests
-        run: npm test
-
-      - name: Run Coveralls
-        if: success()
-        run: npm run coveralls
+      - run: npm install
+      - name: Run script
+        run: npm run ${{ matrix.test-suite }}
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TEST_SUITE: ${{ matrix.test-suite }}
 

@@ -1,15 +1,4 @@
-# Compiled python modules.
-*.pyc
-
-# Swap files
-.*.swp
-
-# Exports for dev mode which should be for local development only
-dev-exports.sh
-
-# Setuptools distribution folder.
 /dist/
-
-# Python egg metadata, regenerated from source files by setuptools.
-/*.egg-info
-/*.egg
+/node_modules/
+package-lock.json
+.DS_Store

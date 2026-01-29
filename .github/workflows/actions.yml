@@ -1,29 +1,36 @@
-name: CI
+name: Node.js CI
 
 on:
   push:
+    branches: [ main, main ]
   pull_request:
+    branches: [ main, main ]
 
 jobs:
   build:
-    runs-on: ubuntu-24.04
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+    runs-on: ubuntu-latest
 
-      - name: Setup Node.js
+    strategy:
+      matrix:
+        node-version: ["12", "10"]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v4
         with:
-          node-version: node
+          node-version: ${{ matrix.node-version }}
 
       - name: Install dependencies
-        run: |
-          make install-checkstyle
-          sudo apt update
-          sudo apt install -qy gjs libgjs-dev
+        run: npm install
 
-      - name: Run scripts
-        run: |
-          make checkstyle
-          make test
+      - name: Run tests
+        run: npm test
+
+      - name: Coveralls
+        uses: coverallsapp/github-action@v2
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+        continue-on-error: true
 

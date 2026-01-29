@@ -1,43 +1,51 @@
-name: CI
+name: Python CI
 
 on:
   push:
-    branches:
-      - main
-      - 'releases/**'
+    branches: [ main, main ]
+  pull_request:
+    branches: [ main, main ]
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     strategy:
+      fail-fast: false
       matrix:
-        python-version: ['3.8', '3.9', '3.10']
+        python-version: ["3.8", "3.9", "3.10-dev", "nightly"]
+        include:
+          - python-version: "3.10-dev"
+            experimental: true
+          - python-version: "nightly"
+            experimental: true
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
       - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
+          cache: 'pip'
 
       - name: Before install
         run: |
-          export TZ=Asia/Seoul
-          python --version
-          pip install -U pip
-          pip install codecov
+          python3 -m pip install -U coverage codecov mypy
 
       - name: Install dependencies
-        run: pip install -e .[dev]
+        run: |
+          python3 -m pip install -r requirements.txt
 
-      - name: Run tests
-        run: coverage run --omit="*/test*" -m unittest discover ./tests/ *test.py
+      - name: Run tests and linting
+        continue-on-error: ${{ matrix.experimental || false }}
+        run: |
+          python3 -m coverage run --branch -m unittest discover -t . -s ni/test/
+          python3 -m mypy ni/*.py
 
-      - name: Submit coverage
+      - name: Upload coverage to Codecov
         if: success()
-        run: codecov
-        env:
-          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+        uses: codecov/codecov-action@v4
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
 

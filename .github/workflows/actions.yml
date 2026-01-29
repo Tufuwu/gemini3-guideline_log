@@ -2,9 +2,9 @@ name: Node.js CI
 
 on:
   push:
-    branches: [ main, main ]
+    branches: [ "*" ]
   pull_request:
-    branches: [ main, main ]
+    branches: [ "*" ]
 
 jobs:
   build:
@@ -12,7 +12,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: ["18", "16", "15", "14"]
+        node-version: ["0.10", "0.12", "4", "6", "node"]
 
     steps:
       - name: Checkout repository

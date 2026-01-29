@@ -1,19 +1,27 @@
-name: CI
+name: Python CI
 
 on:
   push:
+    branches: [ main, main ]
   pull_request:
+    branches: [ main, main ]
 
 jobs:
-  test:
+  build:
     runs-on: ubuntu-24.04
     strategy:
+      fail-fast: false
       matrix:
-        python-version: ["3.8", "3.9", "3.10", "3.11"]
-    env:
-      TOXENV: py
+        python-version: ["3.8", "3.9", "3.10-dev", "nightly"]
+        include:
+          - python-version: "3.10-dev"
+            experimental: true
+          - python-version: "nightly"
+            experimental: true
+
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v5
@@ -23,32 +31,18 @@ jobs:
 
       - name: Install dependencies
         run: |
-          python -m pip install --upgrade pip setuptools
-          python -m pip install --upgrade tox
-          tox --notest
+          python3 -m pip install -U coverage codecov mypy
+          python3 -m pip install -r requirements.txt
 
-      - name: Run tox
-        run: tox
-
-  lint:
-    runs-on: ubuntu-24.04
-    env:
-      TOXENV: lint
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Set up Python 3.11
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.11"
-          cache: 'pip'
-
-      - name: Install dependencies
+      - name: Run tests and mypy
+        continue-on-error: ${{ matrix.experimental || false }}
         run: |
-          python -m pip install --upgrade pip setuptools
-          python -m pip install --upgrade tox
-          tox --notest
+          python3 -m coverage run --branch -m unittest discover -t . -s ni/test/
+          python3 -m mypy ni/*.py
 
-      - name: Run tox
-        run: tox
+      - name: Upload coverage to Codecov
+        if: success()
+        uses: codecov/codecov-action@v4
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
 

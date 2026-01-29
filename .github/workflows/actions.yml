@@ -2,37 +2,40 @@ name: CI
 
 on:
   push:
-    branches-ignore:
-      - '/^v\d+\.\d+\.\d+$/'
-  pull_request:
+    branches:
+      - main
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
+    strategy:
+      matrix:
+        node-version: ["16", "18", "20"]
+
     steps:
-      - name: Checkout
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
+      - name: Set up Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v4
         with:
-          node-version: '16'
+          node-version: ${{ matrix.node-version }}
           cache: 'npm'
 
       - name: Install dependencies
         run: npm install
 
-      - name: Run tests
-        run: npm run test
+      - name: Run validate
+        run: npm run validate
 
-      - name: Build
-        run: npm run build
-
-      - name: Semantic Release
+      - name: Run test report
         if: success()
+        run: npm run test:report
+
+      - name: Run release
+        if: success()
+        run: npm run release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: npx semantic-release
 

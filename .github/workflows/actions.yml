@@ -1,15 +1,18 @@
-name: CI
+name: Python Package
 
 on:
   push:
+    branches: [ "*" ]
   pull_request:
+    branches: [ "*" ]
 
 jobs:
-  test:
-    runs-on: ubuntu-24.04
+  build:
+    runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
-        python-version: ["3.8", "pypy-3.8"]
+        python-version: ["3.8", "3.9", "3.10", "3.11", "3.12", "nightly", "pypy3.6"]
 
     steps:
       - name: Checkout code
@@ -20,19 +23,8 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
 
-      - name: Install dependencies
-        run: |
-          pip install -r requirements-test.txt
-
       - name: Run tests
         run: |
-          python setup.py nosetests
-
-      - name: After success (Coveralls)
-        if: success()
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          pip install coveralls
-          coveralls
+          ./setconf.py --test
+          cd testcases && ./test.sh
 

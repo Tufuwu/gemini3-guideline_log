@@ -1,15 +1,15 @@
-name: Python CI
+name: CI
 
 on:
   push:
   pull_request:
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
+  test:
+    runs-on: ubuntu-24.04
     strategy:
       matrix:
-        python-version: ["3.8", "3.9", "3.10", "3.11"]
+        python-version: ['3.8', '3.9', 'pypy3.8']
 
     steps:
       - name: Checkout code
@@ -23,8 +23,21 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements-dev.txt
+          pip install tox tox-gh-actions codecov
 
-      - name: Run tests
-        run: py.test -v
+      - name: Run tox
+        run: tox
+
+      - name: Upload coverage to Codecov
+        if: success()
+        run: |
+          VERSION="python_${{ matrix.python-version }}"
+          VERSION=${VERSION//[^[:alnum:]]/}
+          codecov --required --flags $VERSION || \
+          (sleep 5 && codecov --required --flags $VERSION) || \
+          (sleep 10 && codecov --required --flags $VERSION) || \
+          (sleep 20 && codecov --required --flags $VERSION) || \
+          (sleep 30 && codecov --required --flags $VERSION)
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 

@@ -2,25 +2,23 @@ name: Node.js CI
 
 on:
   push:
-    branches: [ main, main ]
+    branches: [ "main", "main" ]
   pull_request:
-    branches: [ main, main ]
+    branches: [ "main", "main" ]
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
-    strategy:
-      matrix:
-        node-version: ["12", "10"]
-
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-      - name: Use Node.js ${{ matrix.node-version }}
+      - name: Use Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: "node"
+          cache: 'npm'
 
       - name: Install dependencies
         run: npm install
@@ -28,9 +26,6 @@ jobs:
       - name: Run tests
         run: npm test
 
-      - name: Coveralls
-        uses: coverallsapp/github-action@v2
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-        continue-on-error: true
+      - name: Build project
+        run: npm run build
 

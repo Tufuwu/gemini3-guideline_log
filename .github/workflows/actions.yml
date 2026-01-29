@@ -1,24 +1,15 @@
-name: CI
+name: Python CI
 
 on:
   push:
   pull_request:
 
 jobs:
-  test:
-    runs-on: ubuntu-24.04
+  build:
+    runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ["3.8"]
-        env:
-          - DJANGO: "<2"
-            DRF: "<3.8"
-          - DJANGO: "<2"
-            DRF: "<3.9"
-          - DJANGO: "<2.1"
-            DRF: "<3.9"
-          - DJANGO: "<2.2"
-            DRF: "<3.9"
+        python-version: ["3.8", "3.9", "3.10", "3.11"]
 
     steps:
       - name: Checkout code
@@ -31,8 +22,9 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pip install "django${{ matrix.env.DJANGO }}" "djangorestframework${{ matrix.env.DRF }}"
+          python -m pip install --upgrade pip
+          pip install -r requirements-dev.txt
 
       - name: Run tests
-        run: python runtests.py
+        run: py.test -v
 

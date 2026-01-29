@@ -2,27 +2,31 @@ name: Node.js CI
 
 on:
   push:
-    branches: [ main, main ]
+    branches: [ "*" ]
   pull_request:
-    branches: [ main, main ]
+    branches: [ "*" ]
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
+    strategy:
+      matrix:
+        node-version: ["node", "lts/*"]
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set up Node.js
+      - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v4
         with:
-          node-version: "14"
-          cache: "yarn"
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
 
       - name: Install dependencies
-        run: yarn
+        run: npm install
 
-      - name: Run script
+      - name: Run tests
         run: npm test
 

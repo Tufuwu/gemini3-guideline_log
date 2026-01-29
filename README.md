@@ -1,293 +1,199 @@
-# django-uniauth
+# smtm
+![build status](https://github.com/msaltnet/smtm/actions/workflows/python-test.yml/badge.svg)
+[![license](https://img.shields.io/github/license/msaltnet/smtm.svg?style=flat-square)](https://github.com/msaltnet/smtm/blob/master/LICENSE)
+![language](https://img.shields.io/github/languages/top/msaltnet/smtm.svg?style=flat-square&colorB=green)
+[![codecov](https://codecov.io/gh/msaltnet/smtm/branch/master/graph/badge.svg?token=USXTX7MG70)](https://codecov.io/gh/msaltnet/smtm)
 
-[![build][build-image]][build-url]
-[![pyver][pyver-image]][pyver-url]
-[![djangover][djangover-image]][djangover-url]
-[![pypi][pypi-image]][pypi-url]
+> It's a game to get money. 
 
-`django-uniauth` is an app for allowing authentication through services commonly used by universities, such as [CAS](https://www.apereo.org/projects/cas), while also permitting custom authentication schemes. This approach allows developers to leverage the user data contained within university databases, without strictly tethering themselves to those services. It also allows educational software to have a drop-in authentication solution utilizing the single-sign-on mechanisms of universities, typically CAS, to avoid requiring students to create an additional username or password.
+파이썬 알고리즘기반 암호화폐 자동매매 프로그램. https://smtm.msalt.net
 
-The app was designed to replace key features of the built-in `django.contrib.auth` package. Developers may simply replace the appropriate backends and URLs and let Uniauth handle authentication entirely if they wish. However, the app is also fully customizable, and components may be swapped with compatible replacements if desired.
+[교보문고 - 암호화폐 자동매매 시스템 만들기 with 파이썬](http://www.kyobobook.co.kr/product/detailViewKor.laf?mallGb=KOR&ejkGb=KOR&barcode=9788997924967)
 
-<p align="center">
-  <img src="https://s3.amazonaws.com/uniauth/documentation/Login+Page.png" />
-</p>
+[예스24 - 암호화폐 자동매매 시스템 만들기 with 파이썬](http://www.yes24.com/Product/Goods/107635612)
 
-## Features
+[알라딘 - 암호화폐 자동매매 시스템 만들기 with 파이썬](https://www.aladin.co.kr/shop/wproduct.aspx?ItemId=289526248)
 
- - Supports Python 2.7, 3.5+
- - Supports Django 1.11, 2.x, 3.x, 4.x
- - Supports using a [custom User model](https://docs.djangoproject.com/en/2.2/topics/auth/customizing/#specifying-a-custom-user-model)
- - Supports using email addresses as the ["username" field](https://docs.djangoproject.com/en/2.2/topics/auth/customizing/#django.contrib.auth.models.CustomUser.USERNAME_FIELD)
- - Users can link multiple email addresses and use any for authentication
- - Supports CAS authentication and Single Sign On
- - Multiple CAS servers can be configured and users may use any for authentication
+[English](https://github.com/msaltnet/smtm/blob/master/README-en_us.md) 👈
 
-## Major Updates
+[![icon_wide_gold](https://user-images.githubusercontent.com/9311990/161744914-05e3d116-0e9b-447f-a015-136e0b9ec22b.png)](https://smtm.msalt.net/)
 
- - **1.4.0:** Added support for custom JWT token serializers
- - **1.3.1:** Added support for Django 4.x and newer Python versions
- - **1.3.0:** Added [JWT Support](https://github.com/lgoodridge/django-uniauth#using-jwt-authentication)
- - **1.2.0:** Uniauth `UserProfile` model now backreferenced from the Django `User` model via `user.uniauth_profile` instead of `user.profile`.
 
-## Tutorials
+데이터 수집 -> 알고리즘 분석 -> 거래로 이루어진 간단한 프로세스를 정해진 간격으로 반복 수행하는 것이 기본 개념이며, 기본적으로 분당 1회 프로세스를 처리하는 것으로 검증되었습니다.
 
- - How to add CAS authentication with Uniauth: [link](https://medium.com/@ldgoodridge95/adding-cas-authentication-to-your-django-app-with-django-uniauth-13ff4e1e7bfa)
+1. Data Provider 모듈이 데이터 취합  
+2. Strategy 모듈을 통한 알고리즘 매매 판단  
+3. Trader 모듈을 통한 거래 처리  
+ --- 반복 ---
+4. Analyzer 모듈을 통한 분석
 
-## Table of Contents
+❗ 초 단위의 짧은 시간에 많은 거래를 처리해야하는 고성능 트레이딩 머신으로는 적합하지 않으며, 처리 시간이 중요한 성능이 요구되는 경우 충분한 검토가 필요합니다.
 
- - [Installation](https://github.com/lgoodridge/django-uniauth#installation)
- - [Email Setup](https://github.com/lgoodridge/django-uniauth#email-setup)
- - [Settings](https://github.com/lgoodridge/django-uniauth#settings)
- - [Users in Uniauth](https://github.com/lgoodridge/django-uniauth#users-in-uniauth)
- - [Models](https://github.com/lgoodridge/django-uniauth#models)
- - [Backends](https://github.com/lgoodridge/django-uniauth#backends)
- - [Commands](https://github.com/lgoodridge/django-uniauth#commands)
- - [Views](https://github.com/lgoodridge/django-uniauth#views)
- - [Template Customization](https://github.com/lgoodridge/django-uniauth#template-customization)
- - [URLs](https://github.com/lgoodridge/django-uniauth#urls)
- - [User Migration](https://github.com/lgoodridge/django-uniauth#user-migration)
- - [Using JWT Authentication](https://github.com/lgoodridge/django-uniauth#using-jwt-authentication)
- - [Demo Application](https://github.com/lgoodridge/django-uniauth#demo-application)
- - [Acknowledgements](https://github.com/lgoodridge/django-uniauth#acknowledgements)
+![intro](https://user-images.githubusercontent.com/9311990/140635409-93e4b678-5a6b-40b8-8e28-5c8f819aa88c.jpg)
 
-## Installation
+## 주요기능
+- 시뮬레이션
+- 멀티프로세스 대량시뮬레이션
+- CLI 모드 자동 거래
+- JupyterNotebook을 활용한 원격컨트롤
+- 텔레그램으로 컨트롤 하는 자동거래
 
-Install using [pip](http://www.pip-installer.org/):
+### 텔레그램 챗봇 모드
+텔레그램 챗봇 모드를 사용하면 자동매매 프로그램을 텔레그램 메신저를 사용해서 컨트롤 할 수 있습니다.
 
-    pip install django-uniauth
+텔레그램 챗봇 모드를 위해서는 챗봇을 만들고 API 토큰과 대화방 정보를 입력해서 구동해야 합니다.
 
-Add 'uniauth' to your `INSTALLED_APPS` setting:
+Telegram Controller 모듈은 제공된 정보를 바탕으로 사용자와 텔레그램 메신저를 통해 입력을 받아 Operator를 컨트롤합니다.
 
-    INSTALLED_APPS = [
-        ...
-        uniauth,
-    ]
+![smtm_bot](https://user-images.githubusercontent.com/9311990/150667094-95139bfb-03e0-41d5-bad9-6be05ec6c9df.png)
 
-Add the desired Uniauth authentication backends. For example:
+![telegram_chatbot](https://user-images.githubusercontent.com/9311990/150663864-c5a7ed27-f1c6-4b87-8220-e31b8ccce368.PNG)
 
-    AUTHENTICATION_BACKENDS = [
-        'uniauth.backends.LinkedEmailBackend',
-        'uniauth.backends.CASBackend',
-    ]
+### 시뮬레이션 모드
+시뮬레이션 모드을 통해 과거 거래 데이터를 바탕으로 시뮬레이션을 수행해서 결과를 확인할 수도 있습니다. 간단한 시뮬레이션부터 대량시뮬레이션까지 가능합니다.
 
-Include the `uniauth` URLS in your `urls.py`:
+## 설치방법
+소스 코드를 다운로드하고 관련된 패키지를 설치하세요.
 
-    urlpatterns = [
-        ...
-        path('accounts/', include('uniauth.urls', namespace='uniauth')),
-    ]
+```
+pip install -r requirements.txt
+```
 
-Lastly, add your desired institution CAS server(s). For example:
+시스템 수정 및 개발을 원할 때는 -e 옵션으로 개발관련 패키지도 설치하세요.
 
-    python manage.py add_institution "Example Institution" https://cas.example.edu/
+```
+pip install -r requirements-dev.txt
+```
 
-See the [commands section](https://github.com/lgoodridge/django-uniauth#commands) for more information regarding adding and removing institution CAS servers.
+## 사용방법
+시뮬레이션, 대량 시뮬레이션, 챗봇 모드를 포함하여 아래 6개의 기능을 제공합니다.
 
-## Email Setup
+- 0: 인터렉티브 모드로 시뮬레이터
+- 1: 입려받은 설정값으로 싱글 시뮬레이션
+- 2: 기본 실전 매매 프로그램
+- 3: 텔레그램 챗봇 모드로 실전 매매 프로그램
+- 4: 컨피그 파일을 사용한 대량 시뮬레이션
+- 5: 대량 시뮬레이션을 위한 컨피그 파일 생성
 
-Uniauth will send emails to users when necessary, such as to verify email addresses or for resetting passwords. During development, it may be sufficient to log these emails to the console - this is accomplished by adding the following to `settings.py`:
+### 인터렉티브 모드 시뮬레이터
+아래 명령어로 인터렉티브 모드 시뮬레이터 실행.
 
-    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+```
+python -m smtm --mode 0
+```
 
-On production, a real email backend should be properly set up. See the docs on [setting up an SMTP backend](https://docs.djangoproject.com/en/2.2/topics/email/#smtp-backend) for more information.
+### 싱글 시뮬레이션
+시뮬레이션 파라미터와 아래 명령어로 단일 시뮬레이션을 바로 실행 후 결과 반환.
 
-## Settings
+```
+python -m smtm --mode 1 --budget 500000 --from_dash_to 201220.080000-201221 --term 0.001 --strategy 1 --currency BTC
+```
 
-Uniauth uses the following settings from the `django.contrib.auth` package:
+### 기본 실전 매매 프로그램
+초기값과 함께 기본 실전 매매 프로그램을 실행. 기본 실전 매매 프로그램은 인터렉티브 모드로 실행되어 입력에 따라 거래 시작, 중지, 결과 조회가 가능합니다.
 
- - [`LOGIN_URL`]( https://docs.djangoproject.com/en/2.2/ref/settings/#login-url): Determines where to redirect the user for login, particularly when using the `@login_required` decorator. Defaults to `/accounts/login/`.
- - [`PASSWORD_RESET_TIMEOUT_DAYS`](https://docs.djangoproject.com/en/2.2/ref/settings/#password-reset-timeout-days): Determines how long password reset and email verification links are valid after being generated. Defaults to `3`.
+```
+python -m smtm --mode 2 --budget 100000 --term 60 --strategy 0 --currency ETH
+```
 
-The following custom settings are also used:
+실전 거래를 위해서는 `.env` 파일에 거래소 API KEY와 API host url을 넣어 주어야 합니다.
 
- - `UNIAUTH_ALLOW_SHARED_EMAILS`: Whether to allow a single email address to be linked to multiple profiles. Primary email addresses (the value set in the user's `email` field) must be unique regardless. Defaults to `True`.
- - `UNIAUTH_ALLOW_STANDALONE_ACCOUNTS`: Whether to allow users to log in via an Institution Account (such as via CAS) without linking it to a Uniauth profile first. If set to `False`, users will be required to create or link a profile to their Institution Accounts before being able to access views protected by the `@login_required` decorator. Defaults to `True`.
- - `UNIAUTH_FROM_EMAIL`: Determines the "from" email address when Uniauth sends an email, such as for email verification or password resets. Defaults to `uniauth@example.com`.
- - `UNIAUTH_LOGIN_DISPLAY_STANDARD`: Whether the email address / password form is shown on the `login` view. If `False`, the form, "Create an Account" link, and "Forgot Password" link are hidden, and POST requests for the view will be ignored. Defaults to `True`.
- - `UNIAUTH_LOGIN_DISPLAY_CAS`: Whether the option to sign in via CAS is shown on the `login` view. If `True`, there must be at least one `Institution` in the database to log into. Also, at least one of `UNIAUTH_LOGIN_DISPLAY_STANDARD` or `UNIAUTH_LOGIN_DISPLAY_CAS` must be `True`. Violating either of these constraints will result in an `ImproperlyConfigured` Exception. Defaults to `True`.
- - `UNIAUTH_LOGIN_REDIRECT_URL`: Where to redirect the user after logging in, if no next URL is provided. Defaults to `/`.
- - `UNIAUTH_LOGOUT_REDIRECT_URL`: Where to redirect the user after logging out, if no next URL is provided. If this setting is `None`, and a next URL is not provided, the logout template is rendered instead. Defaults to `None`.
- - `UNIAUTH_LOGOUT_CAS_COMPLETELY`: Whether to log the user out of CAS on logout if the user originally logged in via CAS. Defaults to `False`.
- - `UNIAUTH_MAX_LINKED_EMAILS`: The maximum number of emails a user can link to their profile. If this value is less than or equal to 0, there is no limit to the number of linked emails. Defaults to 20.
- - `UNIAUTH_PERFORM_RECURSIVE_MERGING`: Whether to attempt to recursively merge One-to-One fields when merging users due to linking two existing accounts together. If `False`, One-to-One fields for the user being linked in will be deleted if the primary user has a non-null value for that field. Defaults to `True`.
- - `UNIAUTH_USE_JWT_AUTH`: In a REST API + UI split architecture, set to `True` to save JWT `refresh` and `access` tokens in session cookie on the domain of the API. Tokens will then be retrievable by UI via `GET` request to `/jwt-tokens/`. Defaults to `False`.
+```
+UPBIT_OPEN_API_ACCESS_KEY=Your API KEY
+UPBIT_OPEN_API_SECRET_KEY=Your API KEY
+UPBIT_OPEN_API_SERVER_URL=https://api.upbit.com
+```
 
-## Users in Uniauth
+### 텔레그램 챗봇 모드 실전 매매 프로그램
+아래 명령어로 텔레그램 챗봇 모드 실전 매매 프로그램을 실행. 텔레그램 챗봇 모드 실전 매매 프로그램은 입력받은 텔레그램 챗봇 API 토큰과 대화방 정보를 사용하여 텔레그램 챗봇 메세지를 통해서 거래 시작, 중지, 결과 조회가 가능합니다.
 
-Uniauth supports any custom User model, so long as the model has `username` and `email` fields. The `email` serves as the primary identifying field within Uniauth, with the `username` being set to an arbitrary unique value to support packages that require it. Once a user's profile has been activated, other apps are free to change the `username` without disrupting Uniauth's behavior.
+```
+python -m smtm --mode 3
+```
 
-Users are created by either completing the Sign Up form, or logging in via an `InstitutionAccount`. In the former case, they are given a username beginning with `tmp-`, followed by a unique suffix, and an empty `email` field. When the first email for a user has been verified, their profile is considered fully activated, the `email` field is set to the verified email, and the `username` field is arbitrarily set to that email address as well, unless it is taken. In the latter case, they are given a username describing how they were authenticated, along with the institution they signed into and their ID for that institution. They will keep this username and have an empty `email` field until they link their account to a verified Uniauth profile.
+챗봇 모드를 위해서는 `.env` 파일에 텔레그램 챗봇 API 토큰과 챗봇 대화방 아이디를 넣어 주어야 합니다.
 
-Users may have multiple email addresses linked to their profile, any of which may be used for authentication (if one of the `LinkedEmail` [Uniauth backends](https://github.com/lgoodridge/django-uniauth#backends) are used), or for password reset. The address set in the user's `email` field is considered the "primary email", and is the only one that must be unique across all users. Users may change which linked email is their primary email address at any point via the `settings` page, so long as that primary email is not taken by another user.
+```
+TELEGRAM_BOT_TOKEN=bot123456789:YOUR bot Token
+TELEGRAM_CHAT_ID=123456789
+```
 
-Users may also have multiple `InstitutionAccounts` linked to their profile. These represent alternative ways of logging in, other than the standard username/email + password form. For example, if a University offers authentication via CAS, a user may link their CAS username for that university to their Uniauth profile, so that logging in with CAS authenticates them as the proper user.
+### 대량 시뮬레이션
+대량 시뮬레이션 설정 파일과 함께 실행. 설정 파일을 json 형식이며 텍스트 편집기를 통해서 직접 생성해도 되고, 명령어를 통해 생성도 가능합니다.
 
-## Models
+```
+python -m smtm --mode 4 --config /data/sma0_simulation.json
+```
 
-Uniauth has the following models:
+### 대량 시뮬레이션 설정 파일 생성
+파라미터와 함께 아래 명령어로 대량 시뮬레이션에 사용될 설정 파일을 생성할 수 있습니다.
 
-### UserProfile:
+```
+python -m smtm --mode 5 --budget 50000 --title SMA_6H_week --strategy 1 --currency ETH --from_dash_to 210804.000000-210811.000000 --offset 360 --file generated_config.json
+```
 
-This model is automatically attached to each User upon creation, and extends the User model with the extra data Uniauth requires. The other Uniauth models all interact with the `UserProfile` model rather than the User model directly. Accessible via `user.uniauth_profile`.
+## 설계구조
+계층화된 아키텍쳐 Layered architecture
 
- - `get_display_id`: This method returns a more display-friendly ID for the user, using their username. If the User was created via CAS authentication, it will return their username without the institution prefix (so a User with username "cas-exampleinst-id123" would return "id123"). If their username is an email address, it will return everything before the "@" symbol (so "johndoe@example.com" would become "johndoe"). Otherwise the username is returned unmodified. These generated IDs are not guaranteed to be unique.
+| Layer | Module | Role |
+|:---:|:---:|:---:|
+| Controller Layer | Simulator, Controller, TelegramController| User Interface |
+| Operator Layer | Operator, SimulationOperator |Operating Manager |
+| Core Layer |Analyzer, Trader, Strategy, Data Provider | Core Feature |
 
-### LinkedEmail:
+### Component Diagram
 
-Represents an email address linked to a User's account. Accessible via `user.uniauth_profile.linked_emails`.
+![Component Diagram](https://user-images.githubusercontent.com/9311990/221420624-9807ca39-31c7-4bb6-b3de-3a4114f22430.png)
 
-### Institution:
+### Class Diagram
 
-Represents an organization possesing an authentication server that can be logged into. You will need to add an Institution for each CAS server you wish to support. The `add_institution` and `remove_institution` commands are provided to help with this.
+![Class Diagram](https://user-images.githubusercontent.com/9311990/221420583-6b335aec-1547-47b3-8b64-6a6313127890.png)
 
-### InstitutionAccount:
+### Sequence Diagram
 
-Represents an account a User holds with a particular Institution. Accessible via `user.uniauth_profile.accounts`.
+![Sequence Diagram](https://user-images.githubusercontent.com/9311990/221420634-7ede859b-6b80-4b9d-9af2-0b04a0bfd9d3.png)
 
-## Backends
 
-To use Uniauth as intended, either the `LinkedEmailBackend` or the `UsernameOrLinkedEmailBackend` should be included in your `AUTHENTICATION_BACKENDS` setting, along with the backends for any other authentication methods you wish to support.
+## 테스트 방법
+### 단위 테스트
+unittest를 사용해서 프로젝트의 단위 테스트를 실행.
 
-### CASBackend:
+```
+# run unittest directly
+python -m unittest discover ./tests *test.py -v
+```
 
-The `CASBackend` is inspired from the [`django-cas-ng backend`](https://github.com/mingchen/django-cas-ng/blob/master/django_cas_ng/backends.py) of the same name, and is largely a streamlined version of that class, modified to support multiple CAS servers. This backend's `authenticate` method accepts an `institution`, a `ticket`, and a `service` URL to redirect to on successful authentication, and attempts to verify that ticket with the institution's CAS server.
+### 통합 테스트
+통합 테스트는 실제 거래소를 사용해서 테스트가 진행됩니다. 몇몇 테스트는 주피터 노트북을 사용해서 테스트가 가능하도록 하였습니다. `notebook` 폴더를 확인해 보세요.
 
-If verification succeeds, it looks for an `InstitutionAccount` matching that CAS username, and returns the user for the associated profile. If it succeeds, but there is no such `InstitutionAccount`, a temporary user is created, and the client will eventually be prompted to link this username to an existing Uniauth profile, or create one. If verification fails, authentication fails as well.
+```
+# run unittest directly
+python -m unittest integration_tests
 
-### LinkedEmailBackend:
+# or
+python -m unittest integration_tests.simulation_ITG_test
+```
 
-This backend's `authenticate` method accepts an email and password as keyword arguments, and checks the password against all users with that email linked to their account. If an `email` is not explicitly provided, a few other common field names (such as `email_address` and `username`) are checked and used if found.
+### 개발팁
+커밋을 생성하기 전에 아래 명령어를 사용하여 Jupyter notebook의 출력을 삭제하세요.
 
-**Note:** Since the default Django admin page uses same Authentication Backends as the rest of the site, replacing the default `ModelBackend` with this one will result in usernames no longer being recognized on the admin login screen. You will need to log in with a superuser's email address and password, or use the below `UsernameOrLinkedEmailBackend` instead.
+```bash
+jupyter nbconvert --clear-output --inplace {file.ipynb}
+#jupyter nbconvert --clear-output --inplace .\notebook\*.ipynb
+```
 
-### UsernameOrLinkedEmailBackend:
+시뮬레이션이나 데모 모드를 사용하는 경우, SimulationDataProvider는 업비트의 정보를 사용하므로, 시스템 시간의 타임존이 한국으로 설정되어야 합니다. 특히, 클라우트 리눅스의 경우 아래 명령어로 설정 할 수 있습니다.
 
-Identical to the above class, except the provided `email` argument is also checked against each user's `username`.
+```bash
+timedatectl set-timezone 'Asia/Seoul'
+```
 
-## Commands
+원격 터미널에서 프로그램 실행 후 연결을 종료하더라도 프로그램이 종료되지 않도록 하기 위해서 `nohup`을 사용하는 방법이 있습니다. 표준 출력과 에러를 별도의 파일에 저장하며 백그라운드로 실행하기 위해서는 다음과 같이 실행하면 됩니다.
 
-Uniauth provides the following management commands:
+```bash
+nohup python -m smtm --mode 3 --demo 1 > nohup.out 2> nohup.err < /dev/null &
+```
 
- - `add_institution <name> <cas_server_url>`: Adds an `Institution` with the provided name and CAS server URL to the database. The `name` will be the text displayed in the CAS server dropdown on the Login page, and `cas_server_url` must point to the root URL of a CAS protocol compliant service. The command will return the institution's slug created from the provided name; this slug must be used when referring to the institution in other commands (such as `remove_institution`).
-     - Example Usage: `python manage.py add_institution "Example Inst" "https://www.example.com/cas/"`
-     - You may add the `--update-existing` option to update the CAS server URL of an existing institution with that name, or create one if it does not exist.
- - `remove_institution <slug>`: Removes the `Institution` with the provided slug from the database. This action removes any `InstitutionAccounts` for that instiutiton in the process.
- - `migrate_cas <slug>`: Migrates a project originally using CAS for authentication to using Uniauth. See the [User Migration](https://github.com/lgoodridge/django-uniauth#user-migration) section for more information.
- - `migrate_custom`: Migrates a project originally using custom User authentication to using Uniauth. See the [User Migration](https://github.com/lgoodridge/django-uniauth#user-migration) section for more information.
- - `flush_tmp_users [days]`: Deletes temporary users more than the specified number of days old from the database. The default number of days is 1.
+## 관련 도서
 
-## Views
-
-The five views you will likely care about the most are `login`, `logout`, `signup`, `password-reset`, and `settings`:
-
- - `/login/`: Displays a page allowing users to log in by entering a username/email and password, or via a supported backend, such as CAS. Also displays links for creating an account directly, and for resetting passwords.
- - `/logout/`: Logs out the user. The behavior and redirect location of the log out is determined by the app's settings.
- - `/signup/`: Prompts user for a primary email address, and a password, then sends a verification email to that address to activate the account.
- - `/password-reset/`: Prompts user for an email address, then sends an email to that address containing a link for resetting the password. If no users have the entered email address linked to their account, no email is sent. If multiple users have that address linked, an email is sent for each potential user.
- - `/settings/`: Allows users to perform account related actions, such as link more email addresses, choose the primary email address, link more Institution Accounts, or change their password.
- - `/jwt-tokens/`: In REST API + UI split, allows UI to pop JWT tokens from session cookie on API domain via method `GET`. Returns `404` status if refresh and access tokens are not set.
-
-The remaining views are used internally by Uniauth, and should not be linked to from outside the app:
-
- - `/cas-login/`: If a user chooses to log in via CAS, this view is called with the institution the user wishes to log into as an argument. The view will first redirect to the institution's CAS server and attempt to get a ticket, then return to the original page and attempt to authenticate with that ticket, via the `CASBackend`.
- - `/link-to-account/`: If the user is logged into an `InstitutionAccount` not yet linked to a Uniauth profile, this view offers them the choice between linking it to an existing profile, or creating a new one, and linking it to that upon activation.
- - `/link-from-account/`: If the user is logged into an activated Uniauth profile, this view gives them the opportunity to log into an institution via a supported backend, then link that `InstitutionAccount` to the current profile.
- - `/verify-token/`: Intermediate page used during the email verification process. Verifies the token contained within the link sent to the email address.
- - `/password-reset-*/`: Intermediate pages used during the password reset process. Are nearly identical to the [built-in password reset views](https://docs.djangoproject.com/en/2.2/topics/auth/default/#django.contrib.auth.views.PasswordResetView) provided by the `django.contrib.auth` package.
-
-Uniauth also implements its own version of the `@login_required` decorator, which ensure the user is logged in with an activated Uniauth profile before accessing the view. It may be used identically to the [built-in `@login_required` decorator](https://docs.djangoproject.com/en/2.2/topics/auth/default/#the-login-required-decorator), and should be added to your own views in place of the default version.
-
-## Template Customization
-
-The presentation of the views can be easily changed by overriding the appropriate template(s). For example, to add your own stylesheet to the Uniauth templates, create a `uniauth` folder in your `templates` directory, and add a `base-site.html` file to override the default one like so:
-
-    {% extends "uniauth/base.html" %}
-
-    {% load static from staticfiles %}
-
-    {% block shared-head %}
-    <link rel="shortcut icon" href="{% static 'uniauth/img/favicon.ico' %}"/>
-    <link href="{% static 'path/to/custom-style.css' %}" rel="stylesheet" type="text/css"/>
-    {% endblock %}
-
-    {% block body %}
-    <div id="wrapper">
-        <div id="page-wrapper" class="lavender-bg">
-            <div id="content-wrapper">
-                <div id="top-background"></div>
-                {% block content %}
-                {% endblock %}
-            </div>
-        </div>
-    </div>
-    {% endblock %}
-
-More specific changes can be made by overriding the appropriate template.
-
-## URLs
-
-To add the Uniauth views to your app, you must add an entry to your `urlpatterns` which includes them with the namespace "uniauth". For example:
-
-    path('accounts/', include('uniauth.urls', namespace='uniauth'))
-
-Including the `uniauth.urls` module will add all of Uniauth's views to your app. However, if you only wish to use CAS authentication, you may choose to include the `uniauth.urls.cas_only` module instead, which will only expose the `login`, `cas-login`, and `logout` views.
-
-### URL Parameters
-
-All views except `/settings/` persist URL parameters to their final destination. This means you can add a query string to the `login` URL, and have it apply to the `UNIAUTH_LOGIN_REDIRECT_URL` page, for example.
-
-The only URL parameter that is not preserved is the `next` variable, which indicates the desired location to redirect to after business in the current view is completed. This variable is consumed upon successful redirection to that location, and can be used to dynamically control how the app behaves after visiting a view.
-
-## User Migration
-
-If you wish to use Uniauth with a project that already has users, a `UserProfile` (and, if applicable, `LinkedEmail` or `InstitutionAccount`) will need to be created for each existing user. You may use one of the provided commands to assist with this, provided your project meets one of the following conditions:
-
- - If you were previously using CAS for authentication, and the username for each user matches the CAS ID (as would be the case if you were using a package like [django-cas-ng](https://github.com/mingchen/django-cas-ng)), you should first [add an Institution](https://github.com/lgoodridge/django-uniauth#commands) for the CAS server you were using, then use the `migrate_cas` command with the slug of the created Institution to peform the migration. A `UserProfile` will be created for all users, and the usernames of all Users will be changed to conform to Uniauth's expectations (to `cas-<institution_slug>-<original_username>`). To get the original username (without the CAS institution prefix), use the `get_display_id` method provided by the `UserProfile` model.
- - If you were previously using custom user authentication (as in, Users would sign up with a username / email address and password), you may use the `migrate_custom` command to migrate the users. A `UserProfile` will be created for each migrated user, and a verified `LinkedEmail` will also be created for all users with a non-blank `email` field. Note that any users lacking a username / email or password will not be migrated. Also note that if the `LinkedEmailBackend` is used, users that don't have a `LinkedEmail` created will not be able to log in until one is linked.
-
-If your project does not fit either of these conditions, you will need to manually migrate the users as appropiate. Please create a `UserProfile` for each user, and `LinkedEmails` or `InstitutionAccounts` as appropiate.
-
-## Using JWT Authentication
-
-If you wish to use django-uniauth with JWT authentication (API + UI split), you will need to enable [SessionMiddleware](https://docs.djangoproject.com/en/3.1/topics/http/sessions/) in addition to the following settings:
-
-- `UNIAUTH_USE_JWT_AUTH` explicitly set to `True`.
-- `UNIAUTH_LOGIN_REDIRECT_URL` set to any route of your choice to your UI (ex: `http://your-ui-domain.com/`)
-- `UNIAUTH_LOGOUT_REDIRECT_URL` set to any route of your choice to your UI (ex: `http://your-ui-domain.com/`)
-
-Additionally, you may need the [django-cors-headers](https://pypi.org/project/django-cors-headers/) package to allow your UI to make requests with your API. From this package, you will need
-- `CORS_ALLOWED_ORIGINS` = `["http://you-ui-domain.com/"]`
-- `CORS_ALLOW_CREDENTIALS` = `True`
-
-On the UI, you can link your login/signup buttons to the respective django-uniauth views. Upon logging in, Uniauth will save your JWT tokens in a session cookie on the API's domain. To retrieve and save these tokens, make a `GET` request with `credentials: "include"` in the request headers.
-
-If you have created a [TokenObtainPairSerializer subclass](https://django-rest-framework-simplejwt.readthedocs.io/en/latest/customizing_token_claims.html) for customizing token claims, set the `TOKEN_OBTAIN_SERIALIZER` simplejwt setting accordingly, and Uniauth will use the custom serializer for its JWT tokens as well.
-
-Please refer to [django-rest-framework-simplejwt](https://pypi.org/project/djangorestframework-simplejwt/4.3.0/) for more information on customizing tokens (i.e. token expiration) and more.
-
-## Demo Application
-
-The source repository contains a `demo_app` directory which demonstrates how to setup a simple Django app to use Uniauth. This app has no functionality, and exists solely to show off the installable `uniauth` app. A quick-start guide for integrating Uniauth can be found [here](https://github.com/lgoodridge/django-uniauth/tree/master/demo_app).
-
-## Acknowledgements
-
-Special thank you to [Jérémie Lumbroso](https://github.com/jlumbroso) for his guidance in developing this package.
-
-[build-image]: https://img.shields.io/github/actions/workflow/status/lgoodridge/django-uniauth/run_tests.yml
-[build-url]: https://github.com/lgoodridge/django-uniauth/actions/workflows/run_tests.yml
-
-[djangover-image]: https://img.shields.io/pypi/djversions/django-uniauth.svg?label=django
-[djangover-url]: https://pypi.python.org/pypi/django-uniauth/
-
-[license-image]: https://img.shields.io/github/license/lgoodridge/django-uniauth.svg
-[license-url]: https://github.com/lgoodridge/django-uniauth/blob/master/LICENSE.md
-
-[pypi-image]: https://img.shields.io/pypi/v/django-uniauth.svg
-[pypi-url]: https://pypi.python.org/pypi/django-uniauth/
-
-[pyver-image]: https://img.shields.io/pypi/pyversions/django-uniauth.svg
-[pyver-url]: https://pypi.python.org/pypi/django-uniauth/
-
-[status-image]: https://img.shields.io/pypi/status/django-uniauth.svg
-[status-url]: https://pypi.python.org/pypi/django-uniauth/
+[![smtm-book](https://user-images.githubusercontent.com/9311990/157685437-dcedd2c0-9f0c-400c-a3d4-017354279b60.png)](http://www.kyobobook.co.kr/product/detailViewKor.laf?mallGb=KOR&ejkGb=KOR&barcode=9788997924967)

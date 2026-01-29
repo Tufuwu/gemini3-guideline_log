@@ -1,43 +1,58 @@
-import setuptools
+import io
+import unittest
+from setuptools import find_packages, setup
 
-with open("README.md", "r") as readme:
-    long_description = readme.read()
+# Package meta-data.
+NAME = "smtm"
+DESCRIPTION = "A algorithm crypto trading system."
+URL = "https://github.com/msaltnet/smtm"
+EMAIL = "salt.jeong@gmail.com"
+AUTHOR = "msalt"
+VERSION = "1.1.1"
 
-setuptools.setup(
-    name="django-uniauth",
-    version="1.4.1",
-    author="Lance Goodridge",
-    author_email="ldgoodridge95@gmail.com",
-    keywords=["django", "auth", "authentication", "cas", "sso", "single sign-on"],
-    description="A Django app for managing CAS and custom user authentication.",
-    include_package_data=True,
-    long_description=long_description,
+# What packages are required for this module to be executed?
+REQUIRED = [
+    "requests",
+    "pandas",
+    "numpy",
+    "matplotlib",
+    "mplfinance",
+    "pyjwt",
+    "python-dotenv",
+    "jupyter",
+    "psutil",
+]
+
+
+def long_description():
+    with io.open("README-en_us.md", "r", encoding="utf-8") as f:
+        readme = f.read()
+    return readme
+
+
+def smtm_test_suite():
+    test_loader = unittest.TestLoader()
+    test_suite = test_loader.discover("tests", pattern="*test.py")
+    return test_suite
+
+
+setup(
+    name=NAME,
+    version=VERSION,
+    description=DESCRIPTION,
+    long_description=long_description(),
     long_description_content_type="text/markdown",
-    url="https://github.com/lgoodridge/django-uniauth",
-    license='LGPLv3',
-    python_requires=">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*",
-    install_requires=[
-        "Django>=1.11",
-        "python-cas>=1.4.0",
-        "djangorestframework-simplejwt>=4.1.0",
-    ],
-    extras_require = {
-        ":python_version<='3.2'": ["mock"],
-    },
-    packages=setuptools.find_packages(exclude=["demo-app",]),
+    url=URL,
+    author=AUTHOR,
+    author_email=EMAIL,
+    license="MIT",
+    packages=["smtm"],
     classifiers=[
-        "Development Status :: 5 - Production/Stable",
-        "Framework :: Django",
-        "Framework :: Django :: 1.11",
-        "Framework :: Django :: 2",
-        "Framework :: Django :: 3",
-        "Framework :: Django :: 4",
-        "Intended Audience :: Developers",
-        "License :: OSI Approved :: GNU Lesser General Public License v3 (LGPLv3)",
-        "Natural Language :: English",
-        "Operating System :: OS Independent",
-        "Programming Language :: Python",
-        "Programming Language :: Python :: 2",
-        "Programming Language :: Python :: 3",
-    ]
+        "License :: OSI Approved :: MIT License",
+        "Programming Language :: Python :: 3.6",
+    ],
+    install_requires=REQUIRED,
+    extras_require={"dev": ["coverage"]},
+    test_suite="setup.smtm_test_suite",
+    zip_safe=False,
 )

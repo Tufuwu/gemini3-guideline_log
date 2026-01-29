@@ -10,49 +10,32 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
-    services:
-      postgres:
-        image: postgres:9.6
-        env:
-          POSTGRES_USER: postgres
-          POSTGRES_DB: postgres
-          POSTGRES_HOST_AUTH_METHOD: trust
-        ports:
-          - 5432:5432
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Use Node.js
-        uses: actions/setup-node@v4
+      - name: Setup Node.js
+        uses: actions/setup-node-js@v4
         with:
-          node-version: "node"
+          node-version: "12"
 
-      - name: Create database
+      - name: Start LocalStack
         run: |
-          sudo apt-get install -y postgresql-client
-          psql -c 'create database sequelize;' -U postgres -h localhost
-        env:
-          PGPASSWORD: ""
+          docker pull localstack/localstack
+          docker run --rm -d -p 4566:4566 localstack/localstack
 
       - name: Install dependencies
         run: npm install
 
-      - name: Run tests
-        run: npm test
-
-      - name: Coverage and Coveralls
+      - name: Run lint and unit tests
         run: |
-          ./node_modules/istanbul/lib/cli.js cover ./node_modules/mocha/bin/_mocha --report lcovonly test/overall.test.js -- --exit
-          cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js
-          rm -rf ./coverage
-        env:
-          COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          set -e
+          npm run lint
+          npm run test
+
+      - name: Run integration tests
+        run: |
+          npm link
+          sleep 5
+          SLS_DEBUG=1 npm run test:integration
 

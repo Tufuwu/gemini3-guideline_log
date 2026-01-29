@@ -12,23 +12,24 @@ jobs:
 
     strategy:
       matrix:
-        node-version: ["10", "12", "14"]
+        node-version: ['lts/*', '22', '20']
 
     steps:
-      - name: Checkout code
+      - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
-
-      - name: Install grunt-cli
-        run: npm install grunt-cli -g
+          cache: 'npm'
 
       - name: Install dependencies
         run: npm install
 
       - name: Run tests
         run: npm test
+
+      - name: Run lint
+        run: npm run lint
 

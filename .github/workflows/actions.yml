@@ -2,18 +2,16 @@ name: Node.js CI
 
 on:
   push:
-    branches: [ main, main ]
+    branches: [ "main", "main" ]
   pull_request:
-    branches: [ main, main ]
+    branches: [ "main", "main" ]
 
 jobs:
   build:
-    runs-on: ${{ matrix.os }}
-
+    runs-on: ubuntu-24.04
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
-        node-version: ['latest', '20', '18']
+        node-version: ['16', '17', '18', '19']
 
     steps:
       - name: Checkout repository

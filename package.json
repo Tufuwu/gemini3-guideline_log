@@ -1,53 +1,55 @@
 {
-    "name": "openseadragon",
-    "version": "5.0.1",
-    "description": "Provides a smooth, zoomable user interface for HTML/Javascript.",
-    "keywords": [
-        "image",
-        "zoom",
-        "pan",
-        "openseadragon",
-        "seadragon",
-        "deepzoom",
-        "dzi",
-        "iiif",
-        "osm",
-        "tms"
-    ],
-    "homepage": "https://openseadragon.github.io/",
-    "funding": "https://opencollective.com/openseadragon",
-    "bugs": {
-        "url": "https://github.com/openseadragon/openseadragon/issues"
-    },
-    "license": "BSD-3-Clause",
-    "files": [
-        "build/openseadragon/"
-    ],
-    "main": "build/openseadragon/openseadragon.js",
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/openseadragon/openseadragon.git"
-    },
-    "devDependencies": {
-        "eslint-plugin-compat": "^4.1.2",
-        "grunt": "^1.6.1",
-        "grunt-contrib-clean": "^2.0.1",
-        "grunt-contrib-compress": "^2.0.0",
-        "grunt-contrib-concat": "^2.1.0",
-        "grunt-contrib-connect": "^3.0.0",
-        "grunt-contrib-qunit": "^7.0.1",
-        "grunt-contrib-uglify": "^5.0.1",
-        "grunt-contrib-watch": "^1.1.0",
-        "grunt-eslint": "^24.0.1",
-        "grunt-git-describe": "^2.4.4",
-        "grunt-istanbul": "^0.8.0",
-        "grunt-text-replace": "^0.4.0",
-        "qunit": "^2.19.4"
-    },
-    "scripts": {
-        "test": "grunt test",
-        "prepare": "grunt build",
-        "build": "grunt build",
-        "dev": "grunt dev"
-    }
+  "private": true,
+  "scripts": {
+    "build:prod": "npm run build:prod --workspaces",
+    "build:jsx-highcharts": "npm run build:prod --workspace packages/react-jsx-highcharts",
+    "lint": "eslint \"packages/*/+(src|test)/**\"",
+    "test": "npm run build:jsx-highcharts && jest",
+    "test:coverage": "npm run build:jsx-highcharts && jest --coverage",
+    "test:watch": "jest --watch"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.15.7",
+    "@babel/core": "^7.15.8",
+    "@babel/eslint-parser": "^7.15.8",
+    "@babel/plugin-transform-runtime": "^7.15.8",
+    "@babel/preset-env": "^7.15.8",
+    "@babel/preset-react": "^7.14.5",
+    "@babel/runtime": "^7.15.4",
+    "@testing-library/react": "^12.1.2",
+    "@types/react": "^17.0.33",
+    "babel-loader": "^8.2.3",
+    "babel-plugin-transform-react-remove-prop-types": "^0.4.24",
+    "cross-env": "^7.0.3",
+    "eslint": "^8.4.1",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-import": "^2.25.3",
+    "eslint-plugin-prettier": "^4.0.0",
+    "eslint-plugin-react": "^7.27.1",
+    "eslint-plugin-react-hooks": "^4.3.0",
+    "eslint-plugin-react-perf": "^3.3.1",
+    "highcharts": "^9.3.0",
+    "jest": "^27.3.1",
+    "prettier": "^2.4.1",
+    "prop-types": "^15.7.2",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "react-test-renderer": "^17.0.2",
+    "rimraf": "^3.0.2",
+    "typescript": "^4.4.4",
+    "webpack": "^5.60.0",
+    "webpack-cli": "^4.9.1"
+  },
+  "workspaces": {
+    "packages": [
+      "packages/react-jsx-highcharts",
+      "packages/react-jsx-highstock",
+      "packages/react-jsx-highmaps"
+    ]
+  },
+  "jest": {
+    "projects": [
+      "<rootDir>/packages/*"
+    ]
+  }
 }

@@ -1,4 +1,4 @@
-name: CI
+name: Node.js CI
 
 on:
   push:
@@ -8,24 +8,34 @@ on:
 
 jobs:
   build:
-    # 'dist: jammy' translates to ubuntu-22.04
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: ["16"]
 
     steps:
-      - name: Checkout code
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Use Node.js lts/*
+      - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v4
         with:
-          node-version: 'lts/*'
-
-      - name: Install grunt-cli
-        run: npm install -g grunt-cli
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
 
       - name: Install dependencies
         run: npm install
 
-      - name: Run tests
-        run: npm test
+      - name: Build
+        run: npm run build:prod
+
+      - name: Test
+        run: npm run test:coverage
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Upload coverage to Codecov
+        run: bash <(curl -s https://codecov.io/bash) || echo "Codecov did not collect coverage reports"
 

@@ -1,39 +1,129 @@
-# OpenSeadragon
+![React JSX Highcharts](https://user-images.githubusercontent.com/2003804/40681848-2d0f5ce2-6382-11e8-8ce9-cd49c409ad2e.png)
 
-<!-- [![Gitter][gitter-badge]][gitter]
-[![Build Status][build-badge]][build] -->
+[![Build Status](https://travis-ci.com/whawker/react-jsx-highcharts.svg?branch=master)](https://travis-ci.com/whawker/react-jsx-highcharts)
 
-An open-source, web-based viewer for zoomable images, implemented in pure JavaScript.
+[Highcharts](https://github.com/highcharts/highcharts) built with **proper React components**. More that just a simple wrapper - utilises the power of React props to create dynamic charts!
 
-See it in action and get started using it at [https://openseadragon.github.io/][openseadragon].
+React JSX Highcharts offers separate packages for each Highcharts product.
 
-## Stable Builds
+##### [Highcharts](/packages/react-jsx-highcharts)
 
-See the [GitHub releases page][github-releases].
+##### [Highstock](/packages/react-jsx-highstock)
 
-## Development
+##### [Highmaps](/packages/react-jsx-highmaps)
 
-If you want to use OpenSeadragon in your own projects, you can find the latest stable build, API documentation, and example code at [https://openseadragon.github.io/][openseadragon]. If you want to modify OpenSeadragon and/or contribute to its development, read the [contributing guide][github-contributing] for instructions.
+## Why React JSX Highcharts?
 
-## License
+Unlike other React Highcharts wrapper libraries, **React JSX Highcharts** is designed to be dynamic - it is optimised for _interactive_ charts that need to adapt to business logic in your React application.
 
-OpenSeadragon is released under the New BSD license. For details, see the [LICENSE.txt file][github-license].
+Other Highcharts wrappers completely destroy and recreate the chart when the configuration options change, which is _very_ wasteful and inefficient.
 
-[openseadragon]: https://openseadragon.github.io/
-<!-- [gitter-badge]: https://badges.gitter.im/Join%20Chat.svg
-[gitter]: https://gitter.im/openseadragon/openseadragon?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge
-[build-badge]: https://secure.travis-ci.org/openseadragon/openseadragon.png?branch=master
-[build]: https://travis-ci.org/openseadragon/openseadragon -->
-[github-releases]: https://github.com/openseadragon/openseadragon/releases
-[github-contributing]: https://github.com/openseadragon/openseadragon/blob/master/CONTRIBUTING.md
-[github-license]: https://github.com/openseadragon/openseadragon/blob/master/LICENSE.txt
+React JSX Highcharts uses a different approach. By providing React components for each Highcharts component, we can observe exactly which prop has changed and call the optimal Highcharts method behind the scenes. For example, if the `data` prop were to change on a `<Series />` component, React JSX Highcharts can follow Highcharts best practices and use the `setData` method rather than the more expensive `update`.
 
-## Sponsors
+React JSX Highcharts also enables you to write your _own_ Highcharts components, via its exposed hooks.
 
-We are grateful for the (development or financial) contribution to the OpenSeadragon project.
+## Installation
 
-<a href="https://www.bbmri-eric.eu"><img alt="BBMRI ERIC Logo" src="assets/logos/bbmri-logo.png" height="70" /></a>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-<a href="https://www.pitt.edu/"><img alt="University of Pittsburgh Logo" src="assets/logos/pitt-logo.png" height="70" /></a>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-<a href="https://www.stanford.edu/"><img alt="Stanford University Logo" src="assets/logos/stanford-logo.png" height="70" /></a>
+```sh
+# Install the appropriate React JSX package
+npm install --save react-jsx-highcharts
+#               or react-jsx-highstock
+#               or react-jsx-highmaps
+
+# And the peer dependencies
+npm install --save react react-dom prop-types highcharts@^9.0.0
+```
+
+## Licensing
+
+React JSX Highcharts is free to use, however **Highcharts** itself requires a license for **commercial** use. [Highcharts license FAQs](https://shop.highsoft.com/faq).
+
+## [Documentation](https://github.com/whawker/react-jsx-highcharts/wiki)
+
+## [Examples](https://codesandbox.io/s/github/whawker/react-jsx-highcharts-examples)
+
+## Getting started
+
+The intention of this library is to provide a very thin abstraction of Highcharts using React components. This has been achieved by passing Highcharts configuration options as component props.
+
+In the vast majority of cases, the name of the configuration option, and the name of the component prop are the same.
+
+#### Example
+
+`<Tooltip />` component
+
+```jsx
+<Tooltip padding={10} hideDelay={250} shape="square" split />
+```
+
+This corresponds to the Highcharts' [`tooltip`](http://api.highcharts.com/highcharts/tooltip) configuration of
+
+```js
+tooltip: {
+  enabled: true, // This is assumed when component is mounted
+  padding: 10,
+  hideDelay: 250,
+  shape: 'square',
+  split: true
+}
+```
+
+We aim to pass all configuration options using the same name, so we use [Highcharts' documentation](http://api.highcharts.com/highcharts) to figure out how to achieve the same with React JSX Highcharts.
+
+### Note:
+
+There are **two** exceptions to the above;
+
+#### Exception 1
+
+Where Highcharts **events** are concerned - instead of passing `events` as an object, we use the React convention _onEventName_.
+
+#### Example
+
+```jsx
+<SplineSeries
+  id="my-series"
+  data={myData}
+  onHide={this.handleHide}
+  onShow={this.handleShow}
+/>
+```
+
+This would correspond to the Highcharts configuration
+
+```js
+series: [
+  {
+    type: 'spline',
+    id: 'my-series',
+    data: myData,
+    events: { hide: this.handleHide, show: this.handleShow }
+  }
+];
+```
+
+#### Exception 2
+
+`text` configuration options are passed as a React child
+
+#### Example
+
+```jsx
+<Title>Some Text Here</Title>
+```
+
+This would correspond to the Highcharts configuration
+
+```js
+title: {
+  text: 'Some Text Here';
+}
+```
+
+## Acknowledgements
+
+Thanks to [Recharts](https://github.com/recharts/recharts) for the inspiration of building charts with separate components.
+
+Thanks to Highcharts themselves, obviously.
+
+Thanks to @anajavi for all the help and support in maintaining this project.

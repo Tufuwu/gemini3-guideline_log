@@ -1,9 +1,10 @@
-name: CI
+name: Node.js CI
 
 on:
   push:
-    branches:
-      - main
+    branches: [ "*" ]
+  pull_request:
+    branches: [ "*" ]
 
 jobs:
   build:
@@ -11,31 +12,16 @@ jobs:
 
     strategy:
       matrix:
-        node-version: ["16", "18", "20"]
+        node-version: ['10', '11', '12']
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+    - uses: actions/checkout@v4
 
-      - name: Set up Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ matrix.node-version }}
-          cache: 'npm'
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ matrix.node-version }}
 
-      - name: Install dependencies
-        run: npm install
-
-      - name: Run validate
-        run: npm run validate
-
-      - name: Run test report
-        if: success()
-        run: npm run test:report
-
-      - name: Run release
-        if: success()
-        run: npm run release
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - run: npm install
+    - run: npm test
 

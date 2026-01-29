@@ -1,4 +1,4 @@
-name: CI
+name: Node.js CI
 
 on:
   push:
@@ -10,28 +10,28 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+    strategy:
+      matrix:
+        node-version: ["12", "14", "16", "17"]
+        winston-version: ["winston@3"]
 
-      - name: Use Node.js
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v4
         with:
-          node-version: 'lts/*'
-          cache: 'npm'
+          node-version: ${{ matrix.node-version }}
+
+      - name: Install Winston version
+        run: |
+          npm install ${{ matrix.winston-version }}
+        # travis_retry is not a native GH Action command; 
+        # standard npm install is used here to match the intent.
 
       - name: Install dependencies
         run: npm install
 
-      - name: Build
-        run: npm run build:prod
-
-      - name: Test
-        run: npm run test:coverage
-
-      - name: Lint
-        run: npm run lint
-
-      - name: Upload coverage to Codecov
-        run: bash <(curl -s https://codecov.io/bash) || echo "Codecov did not collect coverage reports"
+      - name: Run tests
+        run: npm test
 

@@ -1,35 +1,25 @@
-name: CI
+name: Node.js CI
 
 on:
   push:
+    branches: [ main, main ]
   pull_request:
+    branches: [ main, main ]
 
 jobs:
   build:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
+
     strategy:
       matrix:
-        node-version: ["20", "18", "16", "14", "12"]
+        node-version: ['9', '8', '7', '6']
+
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 2
-
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ matrix.node-version }}
-
-      - name: Install system dependencies
-        run: |
-          sudo apt-get -qq update
-          sudo apt-get install python3
-          sudo apt-get install php-cli
-          if [[ $(uname -m) == 's390x' ]]; then
-            sudo apt-get install bc;
-          fi
-
-      - name: Install dependencies
-        run: npm install
+    - uses: actions/checkout@v4
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ matrix.node-version }}
+    - run: npm install
+    - run: npm test
 

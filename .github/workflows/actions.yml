@@ -1,24 +1,31 @@
-name: CI
+name: Node.js CI
 
 on:
   push:
+    branches: [ main, main ]
   pull_request:
+    branches: [ main, main ]
 
 jobs:
   build:
     runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: ["18", "16", "15", "14"]
+
     steps:
-      - name: Checkout code
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
+      - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v4
         with:
-          node-version: "10"
+          node-version: ${{ matrix.node-version }}
 
-      - name: Install ajv-cli
-        run: npm install -g ajv-cli
+      - name: Install dependencies
+        run: npm install
 
-      - name: Run validation
-        run: ajv validate -s schema.json -d data.json
+      - name: Run tests
+        run: npm test
 

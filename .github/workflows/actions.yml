@@ -2,17 +2,18 @@ name: Node.js CI
 
 on:
   push:
-    branches: [ main ]
+    branches: [ "*" ]
   pull_request:
-    branches: [ main ]
+    branches: [ "*" ]
 
 jobs:
   build:
-    runs-on: ${{ matrix.arch == 'amd64' && 'ubuntu-latest' || 'ubuntu-22.04' }}
+    runs-on: ubuntu-latest
+
     strategy:
       matrix:
-        node-version: ["18"]
-        arch: [amd64]
+        node-version: ["8", "10", "12", "14"]
+
     steps:
       - uses: actions/checkout@v4
 
@@ -20,9 +21,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
-
-      - name: Before install
-        run: git --version
 
       - name: Install dependencies
         run: npm install

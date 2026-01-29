@@ -2,23 +2,35 @@ name: CI
 
 on:
   push:
-    branches: [ main, main ]
   pull_request:
-    branches: [ main, main ]
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["pypy3.8", "pypy2.7", "3.11", "3.10", "3.9", "3.8"]
+
+    env:
+      TOXENV: base,optional,six19-optional
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up Python "3.8"
+      - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v5
         with:
-          python-version: "3.8"
+          python-version: ${{ matrix.python-version }}
+          cache: 'pip'
 
-      - name: Build and test package
-        run: python setup.py sdist && cd dist/ && tar xf hsluv-*.tar.gz && cd hsluv-*/ && python setup.py test
+      - name: Install dependencies
+        run: pip install tox
+
+      - name: Run tox
+        run: tox
+
+      - name: After script
+        if: always()
+        run: python debug-info.py
 

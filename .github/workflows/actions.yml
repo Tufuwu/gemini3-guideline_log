@@ -2,44 +2,30 @@ name: CI
 
 on:
   push:
-    branches:
-      - main
+    branches: [ main, main ]
   pull_request:
-    branches:
-      - main
+    branches: [ main, main ]
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
-    strategy:
-      matrix:
-        node-version: ['10', '12', '14']
-
-    services:
-      mongodb:
-        image: mongo:latest
-        ports:
-          - 27017:27017
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Use Node.js ${{ matrix.node-version }}
+      - name: Use Node.js 10
         uses: actions/setup-node@v4
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: "10"
+          cache: 'yarn'
 
       - name: Install dependencies
-        run: npm install
-
-      - name: Before script
-        run: |
-          cp config/test.sample.json config/test.json
-          NODE_ENV=test node index.js &
-          sleep 5
+        run: yarn install
 
       - name: Run tests
-        run: make ci
+        run: yarn test
+
+      - name: Run lint
+        run: yarn lint-on-ci
 

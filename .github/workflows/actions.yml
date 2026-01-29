@@ -1,4 +1,4 @@
-name: CI
+name: Node.js CI
 
 on:
   push:
@@ -14,11 +14,19 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up Python 3.8
-        uses: actions/setup-python@v5
+      - name: Use Node.js 16
+        uses: actions/setup-node@v4
         with:
-          python-version: "3.8"
+          node-version: '16'
 
-      - name: Run script
-        run: python setup.py test
+      - name: Install dependencies
+        run: |
+          npm install
+          npm install -g coveralls
+
+      - name: Run tests
+        run: npm test
+
+      - name: Run coverage
+        run: npm run coverage
 

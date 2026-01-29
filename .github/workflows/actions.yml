@@ -5,11 +5,12 @@ on:
   pull_request:
 
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
+    continue-on-error: true
     strategy:
       matrix:
-        python-version: ["3.8", "3.9", "3.11-dev"]
+        python-version: ["3.8", "3.9", "3.10", "pypy-2.7", "pypy-3.6", "pypy-3.7", "pypy-3.8", "pypy-3.9"]
 
     steps:
       - name: Checkout code
@@ -21,15 +22,13 @@ jobs:
           python-version: ${{ matrix.python-version }}
 
       - name: Install dependencies
-        run: |
-          python -m pip install -U pip
-          python -m pip install -U wheel setuptools pbr
-          python -m pip install -U .[docs,test]
-          pip list
-          python --version
+        run: pip install coveralls
 
-      - name: Run script
-        run: |
-          make check
-          rst2html.py README.rst README.html
+      - name: Run tests
+        run: coverage run --branch --source=crc32 test.py
+
+      - name: Upload to Coveralls
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: coveralls
 

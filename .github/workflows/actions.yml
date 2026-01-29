@@ -1,4 +1,4 @@
-name: Node.js CI
+name: CI
 
 on:
   push:
@@ -8,25 +8,24 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    # 'dist: jammy' translates to ubuntu-22.04
+    runs-on: ubuntu-22.04
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Use Node.js 16
+      - name: Use Node.js lts/*
         uses: actions/setup-node@v4
         with:
-          node-version: '16'
+          node-version: 'lts/*'
+
+      - name: Install grunt-cli
+        run: npm install -g grunt-cli
 
       - name: Install dependencies
-        run: |
-          npm install
-          npm install -g coveralls
+        run: npm install
 
       - name: Run tests
         run: npm test
-
-      - name: Run coverage
-        run: npm run coverage
 

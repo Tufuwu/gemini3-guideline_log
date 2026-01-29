@@ -1,32 +1,37 @@
-name: Node.js CI
-
-on:
-  push:
-    branches: [ main, main ]
-  pull_request:
-    branches: [ main, main ]
+name: CI
+on: [push, pull_request]
 
 jobs:
   build:
     runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        node-version: ['14', '16']
-
     steps:
-      - name: Checkout repository
+      - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Use Node.js ${{ matrix.node-version }}
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: '10'
           cache: 'npm'
 
-      - name: Install dependencies
-        run: npm install
+      - name: Install apt packages
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libgconf-2-4
 
-      - name: Run build script
-        run: npm run build
+      - name: Cache Cypress binary
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache
+          key: ${{ runner.os }}-cypress-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-cypress-
+
+      - name: Install dependencies
+        run: |
+          npm install cypress
+          $(npm bin)/cypress install
+
+      - name: Run Cypress tests
+        run: $(npm bin)/cypress run
 

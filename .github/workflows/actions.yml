@@ -1,41 +1,33 @@
-name: CI/CD
+name: Node.js CI
 
 on:
-  schedule:
-    - cron: "0 0 * * *" # Equivalent to Travis CI cron event
   push:
+    branches:
+      - main
+  pull_request:
     branches:
       - main
 
 jobs:
-  build-and-deploy:
+  build:
     runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          persist-credentials: false
 
-      - name: Setup Node.js
+    strategy:
+      matrix:
+        node-version: ["node", "18", "16", "14"]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v4
         with:
-          node-version: "lts/*"
+          node-version: ${{ matrix.node-version }}
 
       - name: Install dependencies
         run: npm install
 
-      - name: Build data
-        run: npm run build.data
-
-      - name: Build site
-        run: npm run build.site
-
-      - name: Deploy to GitHub Pages
-        if: github.event_name == 'schedule' && github.ref == 'refs/heads/master'
-        uses: JamesIves/github-pages-deploy-action@v4
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          branch: master
-          folder: . # Adjust this to your build output directory if different
-          clean: false
+      - name: Run tests
+        run: npm test
 

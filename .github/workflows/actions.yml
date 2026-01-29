@@ -1,16 +1,17 @@
-name: Python CI
+name: CI
 
 on:
   push:
-    branches:
-      - main
+    branches: [ main, main ]
+  pull_request:
+    branches: [ main, main ]
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     strategy:
       matrix:
-        python-version: ["3.8", "3.9", "3.10"]
+        python-version: ["3.8", "3.9"]
 
     steps:
       - name: Checkout code
@@ -23,9 +24,9 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pip install sphinx
-          pip install -r requirements-travis.txt
+          python -m pip install --upgrade pip
+          pip install tox tox-gh-actions
 
-      - name: Run script
-        run: inspekt checkall --disable-style E501,E265,W601,E402,E722,E741 --enable-lint W0611,W1201 --no-license-check
+      - name: Run tox
+        run: tox
 

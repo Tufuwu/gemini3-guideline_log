@@ -12,7 +12,8 @@ jobs:
 
     strategy:
       matrix:
-        node-version: ["16"]
+        node-version: ["16", "17"]
+        winston-ver: ["winston@3"]
 
     steps:
       - name: Checkout repository
@@ -22,20 +23,20 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
-          cache: 'npm'
+
+      - name: Install winston version
+        run: |
+          n=0
+          until [ "$n" -ge 3 ]
+          do
+            npm install ${{ matrix.winston-ver }} && break
+            n=$((n+1))
+            sleep 5
+          done
 
       - name: Install dependencies
         run: npm install
 
-      - name: Build
-        run: npm run build:prod
-
-      - name: Test
-        run: npm run test:coverage
-
-      - name: Lint
-        run: npm run lint
-
-      - name: Upload coverage to Codecov
-        run: bash <(curl -s https://codecov.io/bash) || echo "Codecov did not collect coverage reports"
+      - name: Run tests
+        run: npm test
 

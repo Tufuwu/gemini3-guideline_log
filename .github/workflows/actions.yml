@@ -1,32 +1,29 @@
-name: Node.js CI
+name: CI
 
 on:
   push:
-    branches: [ "main", "main" ]
   pull_request:
-    branches: [ "main", "main" ]
 
 jobs:
   build:
-    runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        node-version: ["18", "20", "21"]
-
+    runs-on: ubuntu-24.04
     steps:
-      - name: Checkout repository
+      - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Use Node.js ${{ matrix.node-version }}
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: ${{ matrix.node-version }}
-          cache: 'npm'
+          node-version: node
 
       - name: Install dependencies
-        run: npm install
+        run: |
+          make install-checkstyle
+          sudo apt update
+          sudo apt install -qy gjs libgjs-dev
 
-      - name: Run tests
-        run: npm test
+      - name: Run scripts
+        run: |
+          make checkstyle
+          make test
 

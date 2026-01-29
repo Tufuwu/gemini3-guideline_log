@@ -1,4 +1,4 @@
-name: Node.js CI
+name: CI
 
 on:
   push:
@@ -7,25 +7,39 @@ on:
     branches: [ main, main ]
 
 jobs:
-  build:
+  inspector-view:
     runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        node-version: ['node', '10', '8']
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Use Node.js ${{ matrix.node-version }}
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: ${{ matrix.node-version }}
+          node_js: 'lts/*'
+          cache: 'yarn'
 
       - name: Install dependencies
-        run: npm install
+        run: yarn install
 
-      - name: Run tests
-        run: npm test
+      - name: Build inspector view
+        run: yarn build:inspectorView
+
+  edit-mode:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node_js: 'lts/*'
+          cache: 'yarn'
+
+      - name: Install dependencies
+        run: yarn install
+
+      - name: Build edit mode
+        run: yarn build:editMode
 

@@ -2,11 +2,9 @@ name: CI
 
 on:
   push:
-    branches:
-      - main
+    branches: [ main, main ]
   pull_request:
-    branches:
-      - main
+    branches: [ main, main ]
 
 jobs:
   build:
@@ -14,7 +12,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: ['20', '18', '16']
+        node-version: ["8", "10", "12"]
 
     steps:
       - name: Checkout repository
@@ -29,17 +27,8 @@ jobs:
       - name: Install dependencies
         run: |
           npm install
-          npm run bootstrap
+          npm install -g codecov
 
-      - name: Run lint
-        run: npm run lint
-
-      - name: Run tests
-        run: npm test
-
-      - name: Coveralls
-        if: success()
-        run: npm run coveralls
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Run script
+        run: npm run test-ci
 

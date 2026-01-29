@@ -1,4 +1,4 @@
-name: Node.js CI
+name: CI
 
 on:
   push:
@@ -12,7 +12,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: ['12', '14', '16']
+        node-version: ['14']
 
     steps:
       - name: Checkout repository
@@ -22,16 +22,11 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
+          cache: 'yarn'
 
       - name: Install dependencies
-        run: npm install
+        run: yarn
 
-      - name: Run tests
-        run: npm test
-
-      - name: Coveralls
-        if: success()
-        run: npm run coveralls
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Run CI script
+        run: yarn ci
 

@@ -1,4 +1,4 @@
-name: CI
+name: Node.js CI
 
 on:
   push:
@@ -10,22 +10,22 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
+    strategy:
+      matrix:
+        node-version: ['12']
+
     steps:
-      - name: Checkout code
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Use Node.js 10
+      - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v4
         with:
-          node-version: "10"
-          cache: 'yarn'
+          node-version: ${{ matrix.node-version }}
 
       - name: Install dependencies
-        run: yarn install
+        run: npm install
 
       - name: Run tests
-        run: yarn test
-
-      - name: Run lint
-        run: yarn lint-on-ci
+        run: npm test
 

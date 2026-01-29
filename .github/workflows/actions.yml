@@ -1,19 +1,22 @@
-name: Python Package
+name: CI
 
 on:
   push:
+    branches: [main]
+    tags: ['*']
   pull_request:
+    branches: [main]
 
 jobs:
-  build:
+  testing:
+    name: Python ${{ matrix.python-version }}
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ["3.8", "3.9"]
+        python-version: ["3.6", "3.7", "3.8", "3.9"]
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v4
@@ -21,18 +24,38 @@ jobs:
           python-version: ${{ matrix.python-version }}
 
       - name: Install dependencies
-        run: |
-          pip install coveralls
-          pip install .
+        run: pip install -r requirements.txt
 
-      - name: Run script
+      - name: Run tests
         run: |
-          python test.py
-          python setup.py check --strict --metadata
-          coverage run --source=nativetypes test.py
+          pytest
+          mypy pyteal
+          python3 -c "import pyteal" scripts/generate_init.py --check
+          black --check .
 
-      - name: Coveralls
+  release:
+    name: PyPi release
+    needs: testing
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && contains(github.ref, 'refs/tags/')
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python 3.9
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.9"
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+          pip install setuptools wheel twine
+
+      - name: Build and publish
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: coveralls
+          TWINE_USERNAME: __token__
+          TWINE_PASSWORD: ${{ secrets.PYPI_TOKEN }}
+        run: |
+          python setup.py sdist bdist_wheel
+          twine upload dist/*
 

@@ -1,10 +1,10 @@
-name: CI
+name: Node.js CI
 
 on:
   push:
-    branches: [ main, main ]
+    branches: [ "main", "main" ]
   pull_request:
-    branches: [ main, main ]
+    branches: [ "main", "main" ]
 
 jobs:
   build:
@@ -12,7 +12,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: ['14']
+        node-version: ["18", "16", "14"]
 
     steps:
       - name: Checkout repository
@@ -22,11 +22,10 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
-          cache: 'yarn'
 
       - name: Install dependencies
-        run: yarn
+        run: npm install
 
-      - name: Run CI script
-        run: yarn ci
+      - name: Run tests
+        run: npm test
 
